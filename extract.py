@@ -1,6 +1,8 @@
 import os, sys
 import sqlite3
-from re import compile
+
+from csv    import reader
+from re     import compile
 
 PATH = './train/'
 
@@ -14,6 +16,7 @@ title_r     = compile("Title: (.*)")
 author_r    = compile("Author: (.*)")
 
 def create_tables():
+    c.execute('''DROP TABLE IF EXISTS words''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS words 
             ( word      TEXT PRIMARY KEY
@@ -21,23 +24,26 @@ def create_tables():
             , UNIQUE    (word)
         )''') 
 
+    c.execute('''DROP TABLE IF EXISTS books''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS books
             ( file      TEXT PRIMARY KEY
             , title     TEXT
             , author    TEXT
+            , category  TEXT
             , total     INTEGER
             , dist      INTEGER
             , UNIQUE    (file)
         )''')
 
+    c.execute('''DROP TABLE IF EXISTS book_words''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS book_words
-            ( book      TEXT
+            ( file      TEXT
             , word      TEXT
             , freq      INTEGER
-            , FOREIGN KEY (book) REFERENCES books(key)
-            , FOREIGN KEY (word) REFERENCES words(key)
+            , FOREIGN KEY (file) REFERENCES books(file)
+            , FOREIGN KEY (word) REFERENCES words(word)
         )''') 
 
 def unique_tokens(text):
@@ -54,8 +60,8 @@ def unique_tokens(text):
             distinct += 1
     return total, distinct, words 
 
-def preprocess_book(book): 
-    path = os.path.join(PATH, book)
+def preprocess_book(file, cat): 
+    path = os.path.join(PATH, file)
     text = open(path).read()
 
     title = title_r.search(text)
@@ -66,23 +72,24 @@ def preprocess_book(book):
 
     total, distinct, tokens = unique_tokens(text.lower())
 
-    c.execute('''INSERT INTO books (file, title, author, total, dist)
-        VALUES (?, ?, ?, ?, ?)''' , [book, title, author, total, distinct])
+    c.execute('''INSERT INTO books (file, title, author, category, total, dist)
+        VALUES (?, ?, ?, ?, ?, ?)''' 
+        , [file, title, author, cat, total, distinct])
 
     return tokens
 
 
 def process_books():
-    for book in os.listdir(PATH):
-        tokens = preprocess_book(book)
+    for (file, cat) in reader(open("train.class")):
+        tokens = preprocess_book(file, cat)
 
         for (tok, freq) in tokens.items(): 
             c.execute('''INSERT OR REPLACE into words (word, freq) VALUES (?, 
                 COALESCE (
                     (SELECT freq FROM words WHERE word = ?), 0) + ?)''',
                 [tok, tok, freq]) 
-            c.execute('''INSERT INTO book_words (book, word, freq) VALUES
-                (?, ?, ?)''', [book, tok, freq])
+            c.execute('''INSERT INTO book_words (file, word, freq) VALUES
+                (?, ?, ?)''', [file, tok, freq])
 
 
 create_tables()
