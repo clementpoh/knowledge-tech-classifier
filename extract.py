@@ -17,7 +17,6 @@ r_title     = compile("Title: (.*)")
 r_author    = compile("Author: (.*)")
 
 def create_tables():
-    c.execute('''DROP TABLE IF EXISTS words''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS words
             ( word      TEXT PRIMARY KEY
@@ -27,7 +26,6 @@ def create_tables():
             , UNIQUE    (word)
         )''')
 
-    c.execute('''DROP TABLE IF EXISTS books''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS books
             ( file      TEXT PRIMARY KEY
@@ -81,7 +79,7 @@ def preprocess_book(file, cat):
     c.execute('''INSERT INTO books (file, title, author, category, total, diff)
         VALUES (?, ?, ?, ?, ?, ?)''', [file, title, auth, cat, total, diff])
 
-    print file, title, auth, cat, total
+    print cat, file, total, title, auth
     return tokens, total
 
 
@@ -92,7 +90,7 @@ def process_books():
 
         for (tok, freq) in tokens.items(): 
             c.execute('''INSERT INTO book_words (file, word, freq, tf) VALUES
-                (?, ?, ?, ?)''', [file, tok, freq])
+                (?, ?, ?, ?)''', [file, tok, freq, freq/total])
 
         nbooks += 1
     return nbooks
@@ -111,32 +109,8 @@ def populate_words(nbooks):
             VALUES (?, ?, ?, ?)''', [word, freq, books, log10(nbooks/books)])
     
 
-def cat_analysis():
-    c.execute('''DROP TABLE IF EXISTS categories''')
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS categories AS
-            SELECT category as category
-                , sum(total) as total
-                FROM books, book_words
-                GROUP BY category, word''')
-
-    c.execute('''DROP TABLE IF EXISTS cat_words''')
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS cat_words AS
-            SELECT categories.category AS category
-                , word AS word
-                , cast(sum(freq) as real)/categories.total AS tf
-            FROM book_words, books, categories
-            WHERE book_words.file = books.file 
-                AND categories.category = books.category
-            GROUP BY categories.category, word
-        ''')
-
 create_tables()
 nbooks = process_books()
 print "Calculating idfs for unique each term."
 populate_words(nbooks)
-print "Calculating category tfs"
-cat_analysis()
 
-conn.commit()
