@@ -52,12 +52,13 @@ def unique_tokens(text):
     words       = {}
     tokens      = delims_r.split(text)
     for t in tokens:
-        total += 1
-        try:
-            words[t] += 1
-        except:
-            words[t] = 1
-            distinct += 1
+        if len(t) > 4:
+            total += 1
+            try:
+                words[t] += 1
+            except:
+                words[t] = 1
+                distinct += 1
     return total, distinct, words 
 
 def preprocess_book(file, cat): 
