@@ -176,37 +176,38 @@ def training_table():
             INNER JOIN indicators USING (word)
         ''')
 
+def write_training_csv():
+    meta = ['file', 'title', 'category', 'author', 'length', 'unique']
+    indicators = c.execute('SELECT word, 0 FROM indicators').fetchall()
+    columns = meta + [w for (w, f) in indicators]
 
-create_tables()
-nbooks = process_books()
-populate_words(nbooks)
-cat_analysis()
-relevance()
-indicators()
-training_table()
-conn.commit()
+    output = DictWriter(open('data/train.csv', 'wb'), columns)
+    # output.writeheader()
 
-meta = ['file', 'title', 'category', 'author', 'length', 'unique']
-indicators = c.execute('SELECT word, 0 FROM indicators').fetchall()
-columns = meta + [w for (w, f) in indicators]
+    print "Outputting final training data csv"
+    for (file, cat) in reader(open("data/train.class")):
+        row = dict(indicators)
+        c.execute('''SELECT author, title, total, diff, word, tf
+                FROM training WHERE file = ?''', [file])
+        for (author, title, total, unique, word, tf) in c.fetchall():
+            row[word] = tf
+        
+        row['file'] = file
+        row['title'] = title
+        row['category'] = cat
+        row['author'] = len(author) if author else 0
+        row['length'] = total
+        row['unique'] = unique
 
-output = DictWriter(open('data/train.csv', 'wb'), columns)
-output.writeheader()
+        output.writerow(row)
 
-print "Outputting final training data csv"
-for (file, cat) in reader(open("data/train.class")):
-    row = dict(indicators)
-    c.execute('''SELECT author, title, total, diff, word, tf
-            FROM training WHERE file = ?''', [file])
-    for (author, title, total, unique, word, tf) in c.fetchall():
-        row[word] = tf
-    
-    row['file'] = file
-    row['title'] = title
-    row['category'] = cat
-    row['author'] = len(author) if author else 0
-    row['length'] = total
-    row['unique'] = unique
 
-    output.writerow(row)
-
+#create_tables()
+#nbooks = process_books()
+#populate_words(nbooks)
+#cat_analysis()
+#relevance()
+#indicators()
+#training_table()
+#conn.commit()
+write_training_csv()
