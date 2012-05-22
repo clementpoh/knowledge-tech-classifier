@@ -26,7 +26,7 @@ rf = RandomForestClassifier(
         , random_state = 1337
         , compute_importances = True
         )
-rf.fit_transform(train, targets)
+rf.fit(train, targets)
 
 classes = list(rf.predict(test))
 probs   = list(rf.predict_proba(test))
