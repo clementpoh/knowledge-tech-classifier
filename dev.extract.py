@@ -2,7 +2,7 @@ import os, sys
 import sqlite3
 
 from re import compile
-from csv import DictWriter
+from csv import DictWriter, reader
 
 PATH = './dev/'
 
@@ -46,14 +46,15 @@ def preprocess_book(file):
     return tokens, total, diff, title, auth
 
 
-meta = ['file', 'author', 'length', 'unique']
+meta = ['file', 'title', 'category', 'author', 'length', 'unique']
 init = c.execute('SELECT word, 0 FROM indicators').fetchall()
 indicators = [w for (w, f) in init]
 columns = meta + indicators
 
-output = DictWriter(open('dev.csv', 'wb'), columns)
+output = DictWriter(open('data/dev.csv', 'wb'), columns)
+output.writeheader()
 
-for file in os.listdir(PATH):
+for (file, cat) in reader(open("data/dev.class")):
     tokens, total, diff, title, auth = preprocess_book(file)
 
     row = dict(init)
@@ -62,7 +63,9 @@ for file in os.listdir(PATH):
             row[tok] = freq / total
             
     row['file'] = file
-    row['author'] = auth
+    row['title'] = title
+    row['category'] = cat
+    row['author'] = len(auth) if auth else 0
     row['length'] = total
     row['unique'] = diff
 

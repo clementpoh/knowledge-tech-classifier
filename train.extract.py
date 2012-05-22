@@ -1,7 +1,7 @@
 import os, sys
 import sqlite3
 
-from csv    import reader
+from csv    import reader, DictWriter
 from re     import compile
 from math   import log10
 
@@ -17,6 +17,7 @@ r_title     = compile("Title: (.*)")
 r_author    = compile("Author: (.*)")
 
 def create_tables():
+    c.execute('''DROP TABLE IF EXISTS words''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS words
             ( word      TEXT PRIMARY KEY
@@ -26,6 +27,7 @@ def create_tables():
             , UNIQUE    (word)
         )''')
 
+    c.execute('''DROP TABLE IF EXISTS books''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS books
             ( file      TEXT PRIMARY KEY
@@ -85,7 +87,7 @@ def preprocess_book(file, cat):
 
 def process_books():
     nbooks = 0.0
-    for (file, cat) in reader(open("train.class")):
+    for (file, cat) in reader(open("data/train.class")):
         tokens, total = preprocess_book(file, cat)
 
         for (tok, freq) in tokens.items(): 
@@ -97,6 +99,7 @@ def process_books():
 
 
 def populate_words(nbooks):
+    print "Calculating idfs for unique each term."
     # Get all the words which appear in more than one book.
     c.execute('''SELECT word, sum(freq), count(*) AS books
             FROM book_words
@@ -108,10 +111,102 @@ def populate_words(nbooks):
         c.execute('''INSERT INTO words (word, freq, books, idf)
             VALUES (?, ?, ?, ?)''', [word, freq, books, log10(nbooks/books)])
     
+def cat_analysis():
+    print "Calculating category totals"
+    c.execute('''DROP TABLE IF EXISTS categories''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS categories AS
+            SELECT category AS category
+                , count(*) AS books
+                , sum(total) AS words
+            FROM books
+            GROUP BY category
+        ''')
+
+    print "Calculating category tfs"
+    c.execute('''DROP TABLE IF EXISTS cat_words''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS cat_words AS
+            SELECT category AS category
+                , word AS word
+                , cast(sum(freq) AS real) / words AS tf
+            FROM book_words NATURAL JOIN books NATURAL JOIN categories
+            GROUP BY category, word;
+        ''')
+
+def relevance():
+    print "Calculating category tf * idfs"
+    c.execute('''DROP TABLE IF EXISTS relevant''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS relevant AS
+            SELECT category AS category
+                , word AS word
+                , tf * idf AS relevance
+            FROM cat_words, words USING (word)
+        ''')
+
+def indicators():
+    print "Selecting top 1000 indicative words"
+    c.execute('''DROP TABLE IF EXISTS indicators''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS indicators AS
+            SELECT category AS category
+                , word as word
+                , relevance as score
+            FROM relevant
+            ORDER BY relevance DESC
+            LIMIT 1000
+        ''')
+
+def training_table():
+    print "Creating training table"
+    c.execute('''DROP TABLE IF EXISTS training''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS training AS
+            SELECT DISTINCT 
+                file as file,
+                title as title,
+                author as author,
+                books.category as category,
+                total as total,
+                diff as diff,
+                word as word,
+                tf as tf
+            FROM books NATURAL JOIN book_words
+            INNER JOIN indicators USING (word)
+        ''')
+
 
 create_tables()
 nbooks = process_books()
-print "Calculating idfs for unique each term."
 populate_words(nbooks)
-
+cat_analysis()
+relevance()
+indicators()
+training_table()
 conn.commit()
+
+meta = ['file', 'title', 'category', 'author', 'length', 'unique']
+indicators = c.execute('SELECT word, 0 FROM indicators').fetchall()
+columns = meta + [w for (w, f) in indicators]
+
+output = DictWriter(open('data/train.csv', 'wb'), columns)
+output.writeheader()
+
+print "Outputting final training data csv"
+for (file, cat) in reader(open("data/train.class")):
+    row = dict(indicators)
+    c.execute('''SELECT author, title, total, diff, word, tf
+            FROM training WHERE file = ?''', [file])
+    for (author, title, total, unique, word, tf) in c.fetchall():
+        row[word] = tf
+    
+    row['file'] = file
+    row['title'] = title
+    row['category'] = cat
+    row['author'] = len(author) if author else 0
+    row['length'] = total
+    row['unique'] = unique
+
+    output.writerow(row)
+
