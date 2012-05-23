@@ -52,7 +52,7 @@ indicators = [w for (w, f) in init]
 columns = meta + indicators
 
 output = DictWriter(open('data/dev.csv', 'wb'), columns)
-# output.writeheader()
+print "Outputting test data csv"
 
 for (file, cat) in reader(open("data/dev.class")):
     tokens, total, diff, title, auth = preprocess_book(file)

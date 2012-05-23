@@ -4,6 +4,11 @@ import sys
 from csv import reader, writer
 from sklearn.ensemble import RandomForestClassifier
 
+splits = 2
+estimators = 100
+features = 300
+seed = 1337
+
 def read_data(filename):
     samples = []
     for row in reader(open(filename)):
@@ -20,10 +25,16 @@ meta    = [x[0:3] for x in raw_test]
 columns = sorted(set(targets))
 
 print "Classifying dev using random forests"
+print "Estimators:\t%d"     % estimators
+print "Min Splits:\t%d"     % splits
+print "Max Features:\t%d"   % features
+print "Random Seed:\t%d"    % seed
+
 rf = RandomForestClassifier(
-        n_estimators = 100
-        , min_samples_split = 2
-        # , random_state = 1337
+        n_estimators = estimators
+        , min_samples_split = splits
+        , max_features = features
+        , random_state = seed
         , compute_importances = True
         )
 rf.fit(train, targets)
