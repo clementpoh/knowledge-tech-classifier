@@ -1,13 +1,19 @@
+TRAIN	=	train.extract.py
+TRAIN_D	=	data/train.csv
+TEST	=	dev.extract.py 
+TEST_D	=	data/dev.csv
+
+
 .PHONY: all
 all:	rf
 
-train:	
-		python train.extract.py
+train:	$(TRAIN)
+		python $(TRAIN)
 
-test:	train
-		python dev.extract.py
+test:	$(TEST) train
+		python $(TEST)
 
-rf:		test
+rf:		train test
 		python rf.classifier.py
 
 svm:	test
@@ -15,4 +21,4 @@ svm:	test
 	
 .PHONY: all
 clean:
-		rm rf.csv svm.csv knowledge.db data/dev.csv data/train.csv
+		rm rf.csv svm.csv knowledge.db data/dev.csv data/train.csv report/report.log report/report.aux

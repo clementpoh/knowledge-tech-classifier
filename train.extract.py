@@ -150,7 +150,7 @@ def relevance():
         ''')
 
 def indicators():
-    nfeatures = 1000
+    nfeatures = 2000
     print "Selecting top %d indicative words" % nfeatures
     c.execute('''DROP TABLE IF EXISTS indicators''')
     c.execute('''Create TABLE IF NOT EXISTS indicators
