@@ -2,10 +2,13 @@ TRAIN	=	train.extract.py
 TRAIN_D	=	data/train.csv
 TEST	=	dev.extract.py 
 TEST_D	=	data/dev.csv
+RF		=	rf.classifier.py
+SVM		=	svm.classifier.py
+REPORT	=	report/report.tex
 
 
 .PHONY: all
-all:	rf
+all:	rf report
 
 train:	$(TRAIN)
 		python $(TRAIN)
@@ -13,11 +16,14 @@ train:	$(TRAIN)
 test:	$(TEST) train
 		python $(TEST)
 
-rf:		train test
-		python rf.classifier.py
+rf:		$(RF) train test
+		python $(RF)
 
-svm:	test
-		python svm.classifier.py
+svm:	$(SVM) train test
+		python $(SVM)
+
+report:	$(REPORT)
+		pdflatex $(REPORT)
 	
 .PHONY: all
 clean:
