@@ -34,6 +34,10 @@ probabilities for each category are then written to a csv file.
 
 Generating Output
 -----------------
+make
+
+OR
+
 1) python train.extract.py
 2) python dev.extract.py
 3) python rf.classifier.py
