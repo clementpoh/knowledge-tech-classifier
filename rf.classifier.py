@@ -34,7 +34,7 @@ rf = RandomForestClassifier(
         n_estimators = estimators
         , min_samples_split = splits
         , max_features = features
-        #, random_state = seed
+        , random_state = seed
         , compute_importances = True
         )
 rf.fit(train, targets)
