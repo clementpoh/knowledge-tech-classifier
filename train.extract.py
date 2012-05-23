@@ -146,7 +146,7 @@ def relevance():
         ''')
 
 def indicators():
-    print "Selecting top 1000 indicative words"
+    print "Selecting top 2000 indicative words"
     c.execute('''DROP TABLE IF EXISTS indicators''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS indicators AS
@@ -155,7 +155,7 @@ def indicators():
                 , relevance as score
             FROM relevant
             ORDER BY relevance DESC
-            LIMIT 1000
+            LIMIT 2000
         ''')
 
 def training_table():

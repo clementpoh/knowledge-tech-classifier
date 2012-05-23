@@ -35,7 +35,7 @@ for i in range(len(test)):
     row = meta[i] + list(probs[i])
     output.writerow(row)
 
-    if classes[i] == meta[i][2]:
+    if meta[i][3] == meta[i][2]:
         correct += 1
 
 print "%s / %s correctly classified." % (correct, i + 1)

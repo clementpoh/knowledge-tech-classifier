@@ -23,7 +23,7 @@ print "Classifying dev using random forests"
 rf = RandomForestClassifier(
         n_estimators = 100
         , min_samples_split = 2
-        , random_state = 1337
+        # , random_state = 1337
         , compute_importances = True
         )
 rf.fit(train, targets)
