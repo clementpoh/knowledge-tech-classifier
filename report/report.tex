@@ -58,7 +58,7 @@ random tree classifier. The second is a support vector machine classifier.
 
 \subsection{Feature Selection}
 
-The features used for classification are the top N, 2000 by default, unique
+The features used for classification are the top N, 1000 by default, unique
 words that are determined to be indicative of category. In addition to these,
 the length of the book, and the number of unique words as well as the length of
 the author's name is also used, if it can be found.  Words are determined to be
@@ -80,7 +80,7 @@ scores occur in many books, but are sufficiently rare that they can be used to
 indicate category. Words with low scores occur in all the books, and are
 therefore discarded.
 
-The top N, 2000 as mentioned above, words of this table are then chosen
+The top N, 1000 as mentioned above, words of this table are then chosen
 to be used as variables for the feature vector as inputs to the classifiers.
 
 This table is then naturally joined with all the words in each book to create
@@ -113,8 +113,8 @@ titles and authors if they can be found; the actual category; predicted
 category; and predicted probabilities for each category are then written to a
 CSV file.
 
-The random forest classifier creates a random forest of T trees, 100 by
-default, considering F features, 100 by default, to fit the training data using
+The random forest classifier creates a random forest of T trees, 200 by
+default, considering F features, 300 by default, to fit the training data using
 GINI coefficients. It is then used to predict the categories of the test data,
 and then outputs its predictions. It performed superbly.
 
