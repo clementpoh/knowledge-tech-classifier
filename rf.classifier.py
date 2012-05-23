@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 splits = 2
 estimators = 100
-features = 300
+features = 100
 seed = 1337
 
 def read_data(filename):

@@ -99,13 +99,15 @@ def process_books():
 
 
 def populate_words(nbooks):
-    print "Calculating idfs for unique each term."
+    threshold = 10
+    print "Calculating idfs for unique each term"
+    print "appearing in more than %d books" % threshold
     # Get all the words which appear in more than one book.
     c.execute('''SELECT word, sum(freq), count(*) AS books
             FROM book_words
             GROUP BY word
-            HAVING books > 1
-        ''')
+            HAVING books > ?
+        ''', [threshold])
 
     for (word, freq, books) in c.fetchall():
         c.execute('''INSERT INTO words (word, freq, books, idf)
@@ -146,7 +148,8 @@ def relevance():
         ''')
 
 def indicators():
-    print "Selecting top 2000 indicative words"
+    nfeatures = 2000
+    print "Selecting top %d indicative words" % nfeatures
     c.execute('''DROP TABLE IF EXISTS indicators''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS indicators AS
@@ -155,8 +158,8 @@ def indicators():
                 , relevance as score
             FROM relevant
             ORDER BY relevance DESC
-            LIMIT 2000
-        ''')
+            LIMIT ?
+        ''', [nfeatures])
 
 def training_table():
     print "Creating training table"

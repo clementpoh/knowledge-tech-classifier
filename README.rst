@@ -19,9 +19,18 @@ classifiers, then outputs the training vectors for the classifiers.
 
 The second extractor reads the test data, tokenises it and creates the feature
 vectors for the test data according to the analysis carried out by the training
-extractor.
+extractor. The output specifications for the two extractors are exactly the
+same. So they could be used interchangeably.
 
-The classifiers are completely independent of each other. 
+The classifiers are completely independent of each other, but are made to be
+compatible with the feature vectors created by the extractors. The first is is a
+random tree classifier. The second is a support vector machine classifier.
+
+The classifiers are completely independent of each other.  Both classifiers take
+the same data sets as input and write to the same output specification, so can
+be used interchangeably. They both output the file names; titles and authors if
+they can be found; the actual category; predicted category; and predicted
+probabilities for each category are then written to a csv file.
 
 Generating Output
 -----------------
