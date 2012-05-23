@@ -17,7 +17,7 @@ targets = [ord(x[2]) for x in raw_train]
 train   = [x[3:] for x in raw_train]
 test    = [x[3:] for x in raw_test]
 meta    = [x[0:3] for x in raw_test]
-columns = sorted(set(targets))
+columns = [chr(x) for x in sorted(set(targets))]
 
 svc = svm.SVC(probability=True)
 svc.fit(train, targets)

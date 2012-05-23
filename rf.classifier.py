@@ -5,8 +5,8 @@ from csv import reader, writer
 from sklearn.ensemble import RandomForestClassifier
 
 splits = 2
-estimators = 100
-features = 100
+estimators = 200
+features = 300
 seed = 1337
 
 def read_data(filename):
@@ -16,7 +16,7 @@ def read_data(filename):
     return samples
 
 raw_train = read_data("data/train.csv")
-raw_test = read_data("data/dev.csv")
+raw_test = read_data("data/test.csv")
 
 targets = [x[2] for x in raw_train]
 train   = [x[3:] for x in raw_train]
@@ -34,7 +34,7 @@ rf = RandomForestClassifier(
         n_estimators = estimators
         , min_samples_split = splits
         , max_features = features
-        , random_state = seed
+        #, random_state = seed
         , compute_importances = True
         )
 rf.fit(train, targets)

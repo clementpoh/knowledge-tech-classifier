@@ -10,13 +10,11 @@
 
 
 \begin{abstract}
-
 Text categorisation is a machine learning process that attempts to classify text
 documents in to different categories or genres. This paper explores the process
-of text categorisation from feature extraction with tf * idf values, to
+of text categorisation from feature extraction with TF*IDF values, to
 classification with random forests and a cursory attempt using support vector
 machines.
-
 \end{abstract}
 
 
@@ -31,7 +29,7 @@ computer science. Modern applications of categorisation are used searching and
 spam filtering.
 
 In this report, modern concepts from computer science are applied to a problem
-already solved a long ago in library science; the classification of classics.
+from library science; the classification of classics.
 
 \section{Aim}
 
@@ -60,57 +58,70 @@ random tree classifier. The second is a support vector machine classifier.
 
 \subsection{Feature Selection}
 
-The features used for classification are the top N unique words that are
-determined to be indicative of category, two thousand by default. In
-addition to these, the length of the book, and the number of unique words as
-well as the length of the author's name is also used, if it can be found. 
+The features used for classification are the top N, 2000 by default, unique
+words that are determined to be indicative of category. In addition to these,
+the length of the book, and the number of unique words as well as the length of
+the author's name is also used, if it can be found.  Words are determined to be
+indicative according to their TF*IDF score, where TF is calculated across the
+category.
 
 The training extractor attempts to tokenise each book, keeping track of: total
 number of words; total unique words; category; word; and each word's term
-frequency; inserting them into a database. Then a list is created with each
-word's term frequency calculated over the categories it is found in.
+frequency; storing information about each word and each book in a database.
+Then a list is created with each word's term frequency calculated over the
+categories it is found in.
 
-At the same time a list of words is created populated with words that appear in
-more than M books, ten by default, and their respective inverse document
-frequencies. 
+A list of words is created populated with words that appear in more than M, 10
+by default, books and their respective inverse document frequencies. 
 
-These two lists are crossed, and the tf*idfs for each word, in each category are
-calculated. The idea is that words in the resultant table with high tf*idf
+These two lists are crossed, and the TF*IDFs for each word, in each category are
+calculated. The idea is that words in the resultant table with high TF*IDF
 scores occur in many books, but are sufficiently rare that they can be used to
 indicate category. Words with low scores occur in all the books, and are
 therefore discarded.
 
-The top N (as specified above) words of this table are then chosen to be used as
-variables for the feature vector as inputs to the classifiers.
+The top N, 2000 as mentioned above, words of this table are then chosen
+to be used as variables for the feature vector as inputs to the classifiers.
 
-This table is then naturally joined with all the books to create the training
-feature vector, which is then processed and written out as a csv file.
+This table is then naturally joined with all the words in each book to create
+the training feature vector, where the value used is the word's term frequency
+in the book. 
 
 The test extractor reads each of the files to be predicted, searching for the
 variables to be used in the feature vector, and outputs the result of this to a
-csv file.
+CSV file.
+
+Due to the scanning technique used by the data extraction program, the system
+did not work on the Chinese language book as it couldn't identify spaces due to
+the different character sets and would have had trouble identifying tokens even
+if it could. So this programme is suitable only for plain text books which use
+half-width spaces.
+
+Originally it was anticipated the authors' names would be used as features, but
+the classifiers packages only accept float values as variables. So the length of
+the authors' names is used for questionable value.
 
 \subsection{Categorisation}
 
 Random forests and support vector machines are powerful classification
-techniques so were chosen as classifiers. The classifiers were implemented using
-the python package sklearn.
+techniques and were chosen as classifiers for this reason. The classifiers were
+implemented using the python package sci-kit.
 
 Both classifiers take the same data sets as input and write to the same output
 specification, so can be used interchangeably. They both output the file names;
 titles and authors if they can be found; the actual category; predicted
 category; and predicted probabilities for each category are then written to a
-csv file.
+CSV file.
 
-The random forest classifier creates a random forest of T trees, one hundred by
-default, considering F features, one hundred by default, to fit the training
-data. It is then used to predict the categories of the test data, and then
-outputs its predictions. It performed superbly.
+The random forest classifier creates a random forest of T trees, 100 by
+default, considering F features, 100 by default, to fit the training data using
+GINI coefficients. It is then used to predict the categories of the test data,
+and then outputs its predictions. It performed superbly.
 
 In much the same way the support vector machine classifier attempts to fit the
-training data, then predict the test data. It performed very poorly.  The
+training data, then predict the test data. It performed very poorly. The
 original intention was to combine the two classifiers into a better hybrid
-classifier; however, due to the poor performance of the svm classifier, the plan
+classifier; however, due to the poor performance of the SVM classifier, the plan
 was discontinued.
 
 \section{Results}
@@ -126,23 +137,108 @@ split; with 2000 variables, with words that appear in greater than 10 books, the
 random forest can consistently achieve 88 to 90 correct documents.
 
 The support vector machine classifier performs abysmally, consistently achieving
-an accuracy of only 46 out of 100.
+an accuracy of only 46 out of 100, predicting each book to be only category G.
+Following this result, further development with the SVM classifier was halted.
+It is likely that this was caused by the prominence of G documents in the
+training set.
 
 \section{Analysis}
 
+The classifier correctly predicted a very high proportion of the documents
+implying that the test set and training sets were distributed very similarly.
+
+\subsection{Improving Accuracy}
+
+Due to the random nature of the random forest classifier and the corresponding
+increase in processing time it is difficult to say precisely how much the
+classifier improved when each technique was applied.
+
+The greatest initial improvements of the classifier were found by expanding the
+feature vector from 1000 variables to 2000 variables. Until this increase,
+neither increasing the number of trees nor raising the number of variables
+considered per split were found to increase the accuracy of the RF
+significantly. 
+
+After increasing the size of the feature vector, the effectiveness of the
+classifier also increased, when increasing the number of trees, and variables
+considered at each split.
+
+Raising the threshold for the number of books a word is required to be in, to
+qualify as a variable from 1 to 10, seemed to lower the variance of the output.
+This is credibly because names that appeared in few books were now excluded as
+variables.
+
+\subsection{Result Analysis}
+
+The following was achieved, when running the random forest classifier at maximal
+settings for an accuracy rating of 88/100.
+
+\begin{table}[h]
+\begin{center}
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        Category & TP & FP & FN \\
+        \hline \hline
+        A & 0   & 0 & 3 \\
+        B & 11  & 3 & 1 \\
+        C & 4   & 0 & 0 \\
+        D & 12  & 4 & 2 \\
+        E & 12  & 3 & 0 \\
+        F & 0   & 0 & 3 \\
+        G & 44  & 1 & 2 \\
+        H & 5   & 1 & 1 \\
+        \hline
+    \end{tabular}
+\caption{Performance of the random forest classifier.}\label{table1}
+\end{center}
+\end{table}
+
+While the performance of the system is fairly clear from the table, there are a
+few points that are important to note. Category C was predicted perfectly from
+the table.
+
+Taking a closer look at the classification mistakes, it appears as though
+categories A and F were occluded by the other categories. In each actual
+occurrence of A, the classifier predicted D; in each actual instance of F the
+classifier called E. For each false positive of B, the category was actually D.
+These outcomes are likely due to shared indicators, or indicate similarity of
+categories.
+
 \section{Discussion}
 
-Couldn't parse chinese book.
-Originally wanted to use author's name
-Wanted to use phrases
-stemming
-Important variables.
-Should get top 125 of each.
-remove the gutenberg header and footers.
+While the system was overall very successful in categorising the test set
+against the training set, there are a few avenues for possible improvement
+apart from the ones already mentioned above.
+
+The method seems to scale fairly well, switching the test set to be used as a
+dataset, and the test set to be predicted, the program correctly predicted
+237/300 documents using 200 trees; Unsurprisingly, a quick look at the output
+suggests that the issues it suffers from normally are exacerbated only
+correctly predicting 3/12 instances of C documents.
+
+Very often document titles are indicative of the subject of a document. Even
+just the same analysis that was applied to document content, could be applied
+to document titles with appropriate weighting, might improve the system's
+accuracy.
+
+A lot of words are dispersed over their inflected, conjugated and declined
+versions of themselves. If the words were stemmed before processing, it might
+improve the effectiveness of the classifier.
+
+Context is lot when using individual words; if repeated phrases , or even just
+trigrams or bigrams were used as feature variables it is reasonable that there
+may be an improvement in the classifier.
+
+The words used in the feature vectors may be chosen more evenly from each
+category; rather than just choosing the top 2000 TF*IDF scored words, it might
+be better to choose the top 250 from each category.
 
 \section{Conclusions}
 
-Concluding text.
+The text categorisation method outlined in this report offers a plausible first
+attempt at document classification. The system developed is likely to work with
+western, and maybe even all alphabetic languages, but would be abominable on
+pictorial, i.e. East Asian, languages.  
 
 \bibliographystyle{acl}
 \bibliography{sample}

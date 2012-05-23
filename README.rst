@@ -53,6 +53,9 @@ rf.classifier.py creates:
 svm.classifier.py creates:
     svm.csv
 
+When using 500 trees per forest, and 300 features per split, rf.classifier.py
+takes around 301.66 seconds on an Ubuntu Core 2 Duo.
+
 Important files
 ---------------
 train.extract.py 

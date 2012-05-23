@@ -17,6 +17,7 @@ r_title     = compile("Title: (.*)")
 r_author    = compile("Author: (.*)")
 
 def create_tables():
+    print "Creating tables"
     c.execute('''DROP TABLE IF EXISTS words''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS words
@@ -86,6 +87,7 @@ def preprocess_book(file, cat):
 
 
 def process_books():
+    print "Parsing books"
     nbooks = 0.0
     for (file, cat) in reader(open("data/train.class")):
         tokens, total = preprocess_book(file, cat)
@@ -100,7 +102,7 @@ def process_books():
 
 def populate_words(nbooks):
     threshold = 10
-    print "Calculating idfs for unique each term"
+    print "Calculating idfs for each each term"
     print "appearing in more than %d books" % threshold
     # Get all the words which appear in more than one book.
     c.execute('''SELECT word, sum(freq), count(*) AS books
