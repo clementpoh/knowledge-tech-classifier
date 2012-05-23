@@ -1,0 +1,106 @@
+\documentclass[11pt]{article}
+\usepackage{colacl}
+\sloppy
+
+\title{COMP90049 Project II Report}
+\author{Clement Poh cjpoh 269508}
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+
+Text categorisation is a machine learning process that attempts to classify text
+documents in to different categories or genres. This paper explores the process
+of text categorisation from feature extraction to classification with random
+forests and a cursory attempt using support vector machines.
+
+\end{abstract}
+
+
+\section{Introduction}
+
+Document classification and text categorisation is the task of classifying text
+documents into a set of predefined categories. Traditionally classification was
+in the province of library sciences. With the advent of computer systems and the
+internet and the subsequent explosion of information, methods of automatically
+categorising the information effectively are an active field of research in
+computer science. Modern applications of categorisation are used searching and
+spam filtering.
+
+In this report, modern concepts from computer science are applied to a problem
+already solved a long ago in library science; the classification of classics.
+
+\section{Aim}
+
+The aim of this report is to develop a text categorisation system to classify a
+collection of books. The system is provided with three hundred books to be
+trained on, to generate a feature set that is used to predict the categories of
+another hundred books.
+
+\section{Metrics}
+
+
+\section{Approach}
+
+The system is split into four parts. The first two parts are responsible for
+feature extraction and selection. The latter two are used for classification.
+
+The first extracts tokens and other data from the training documents. It
+analyses the data, then outputs the training vectors for the classifiers. 
+
+The second creates the feature vectors for the test data from the books
+themselves and according to the analysis carried out by the previous part.
+
+
+
+\subsection{Feature Extraction & Selection}
+
+
+
+\subsection{Categorisation}
+
+% Text of the subsection with citations such as 
+% \newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64} 
+
+ 
+\subsubsection{Subsubsection}
+
+% Text of the subsubsection (see Table~\ref{table1}).
+
+\begin{comment}
+    \begin{table}[h]
+     \begin{center}
+        \begin{tabular}{|l|l|}
+
+              \hline
+              Corpus & Features\\
+              \hline\hline
+              AAA & 1M words\\
+              BBB & spoken corpus (expensive)\\
+              CCC & 2M words\\
+                & free (to academics)\\
+              \hline
+
+        \end{tabular}
+    \caption{The caption of the table}\label{table1}
+     \end{center}
+    \end{table}
+\end{comment}
+
+
+
+
+\section{Section}
+
+\section{Section}
+
+\section{Conclusions}
+
+Concluding text.
+
+\bibliographystyle{acl}
+\bibliography{sample}
+
+\end{document}
