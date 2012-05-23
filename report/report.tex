@@ -39,24 +39,30 @@ collection of books. The system is provided with three hundred books to be
 trained on, to generate a feature set that is used to predict the categories of
 another hundred books.
 
-\section{Metrics}
-
-
 \section{Approach}
 
-The system is split into four parts. The first two parts are responsible for
-feature extraction and selection. The latter two are used for classification.
+The system is split into four parts. The former two parts are responsible for
+feature extraction and selection. The latter two are for classification.
 
-The first extracts tokens and other data from the training documents. It
-analyses the data, then outputs the training vectors for the classifiers. 
+The first extractor extracts tokens and other data from the training documents.
+It analyses the data determines the relevant features to be used for the
+classifiers, then outputs the training vectors for the classifiers. 
 
-The second creates the feature vectors for the test data from the books
-themselves and according to the analysis carried out by the previous part.
+The second extractor reads the test data, tokenises it and creates the feature
+vectors for the test data according to the analysis carried out by the training
+extractor.
 
-
+The classifiers are completely independent of each other, but are made to be
+compatible with the feature vectors created by the extractors. The first is is a
+random tree classifier. The second is a support vector machine classifier.
 
 \subsection{Feature Extraction & Selection}
 
+The features used for classification are the top N, words that are indicative of
+category and the length of the author's name, if it can be found. N is set to
+two thousand by default.
+
+Both extractors output csv files that could be used interchangeably.
 
 
 \subsection{Categorisation}

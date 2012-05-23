@@ -8,6 +8,21 @@ The original intention was just to use the random forest, but I did want
 something to match it against, hence the SVM, but it was much more of an
 afterthought.
 
+Outline
+-------
+The system is split into four parts. The former two parts are responsible for
+feature extraction and selection. The latter two are for classification.
+
+The first extractor extracts tokens and other data from the training documents.
+It analyses the data determines the relevant features to be used for the
+classifiers, then outputs the training vectors for the classifiers. 
+
+The second extractor reads the test data, tokenises it and creates the feature
+vectors for the test data according to the analysis carried out by the training
+extractor.
+
+The classifiers are completely independent of each other. 
+
 Generating Output
 -----------------
 1) python train.extract.py
