@@ -159,7 +159,12 @@ def indicators():
         )''')
 
     for cat in c.execute('SELECT category FROM categories').fetchall():
-        xs = c.execute('SELECT word, relevance FROM relevant WHERE category = ? ORDER BY relevance DESC LIMIT 125', cat).fetchall()
+        xs = c.execute('''SELECT word, relevance 
+                FROM relevant 
+                WHERE category = ? 
+                ORDER BY relevance DESC
+                LIMIT 200'''
+            , cat).fetchall()
         for x in xs:
             c.execute('INSERT INTO indicators (word, score) VALUES (?, ?)', x)
     """
