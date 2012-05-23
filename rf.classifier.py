@@ -16,7 +16,7 @@ def read_data(filename):
     return samples
 
 raw_train = read_data("data/train.csv")
-raw_test = read_data("data/test.csv")
+raw_test = read_data("data/dev.csv")
 
 targets = [x[2] for x in raw_train]
 train   = [x[3:] for x in raw_train]

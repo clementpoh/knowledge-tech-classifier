@@ -150,9 +150,19 @@ def relevance():
         ''')
 
 def indicators():
-    nfeatures = 2000
+    nfeatures = 1000
     print "Selecting top %d indicative words" % nfeatures
     c.execute('''DROP TABLE IF EXISTS indicators''')
+    c.execute('''Create TABLE IF NOT EXISTS indicators
+            ( word      TEXT
+            , score     REAL
+        )''')
+
+    for cat in c.execute('SELECT category FROM categories').fetchall():
+        xs = c.execute('SELECT word, relevance FROM relevant WHERE category = ? ORDER BY relevance DESC LIMIT 125', cat).fetchall()
+        for x in xs:
+            c.execute('INSERT INTO indicators (word, score) VALUES (?, ?)', x)
+    """
     c.execute('''
         CREATE TABLE IF NOT EXISTS indicators AS
             SELECT category AS category
@@ -162,6 +172,7 @@ def indicators():
             ORDER BY relevance DESC
             LIMIT ?
         ''', [nfeatures])
+    """
 
 def training_table():
     print "Creating training table"
