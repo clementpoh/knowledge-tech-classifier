@@ -28,8 +28,9 @@ categorising the information effectively are an active field of research in
 computer science. Modern applications of categorisation are used searching and
 spam filtering.
 
-In this report, modern concepts from computer science are applied to a problem
-from library science; the classification of classics.
+In this report, modern concepts from computer science are applied to a classic
+problem from library science; the classification of classics from the Gutenberg
+library.
 
 \section{Aim}
 
@@ -151,7 +152,8 @@ implying that the test set and training sets were distributed very similarly.
 
 Due to the random nature of the random forest classifier and the corresponding
 increase in processing time it is difficult to say precisely how much the
-classifier improved when each technique was applied.
+classifier improved when each technique was applied; it was difficult to test
+each technique independently.
 
 The greatest initial improvements of the classifier were found by expanding the
 feature vector from 1000 variables to 2000 variables. Until this increase,
@@ -170,26 +172,26 @@ variables.
 
 \subsection{Result Analysis}
 
-The following was achieved, when running the random forest classifier at maximal
-settings for an accuracy rating of 88/100.
+The results achieved in the table below, were the result of running the random
+forest classifier at maximal settings for an accuracy rating of 88/100.
 
 \begin{table}[h]
 \begin{center}
-    \begin{tabular}{|l|l|l|l|}
+    \begin{tabular}{|l|l|l|l|l|l|}
         \hline
-        Category & TP & FP & FN \\
+        Cat & TP & FP & FN & Precision & Recall \\
         \hline \hline
-        A & 0   & 0 & 3 \\
-        B & 11  & 3 & 1 \\
-        C & 4   & 0 & 0 \\
-        D & 12  & 4 & 2 \\
-        E & 12  & 3 & 0 \\
-        F & 0   & 0 & 3 \\
-        G & 44  & 1 & 2 \\
-        H & 5   & 1 & 1 \\
+        A & 0   & 0 & 3 & 0    & 0      \\
+        B & 11  & 3 & 1 & 0.79 & 0.92   \\
+        C & 4   & 0 & 0 & 1    & 1      \\
+        D & 12  & 4 & 2 & 0.75 & 0.86   \\
+        E & 12  & 3 & 0 & 0.8  & 1      \\
+        F & 0   & 0 & 3 & 0    & 0      \\
+        G & 44  & 1 & 2 & 0.98 & 0.96   \\
+        H & 5   & 1 & 1 & 0.83 & 0.83   \\
         \hline
     \end{tabular}
-\caption{Performance of the random forest classifier.}\label{table1}
+\caption{Random Forest Performance}\label{table1}
 \end{center}
 \end{table}
 
@@ -233,6 +235,9 @@ The words used in the feature vectors may be chosen more evenly from each
 category; rather than just choosing the top 2000 TF*IDF scored words, it might
 be better to choose the top 250 from each category.
 
+With the training data provided, I am not confident the system would work well
+with unedited self published content i.e. with E-mails, forum posts, tweets etc.
+
 \section{Conclusions}
 
 The text categorisation method outlined in this report offers a plausible first
@@ -246,5 +251,6 @@ training data is badly formed the classifier will only reflect the bias.
 
 \bibliographystyle{acl}
 \bibliography{sample}
+\nocite{*}
 
 \end{document}

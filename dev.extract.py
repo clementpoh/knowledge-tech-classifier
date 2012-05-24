@@ -10,7 +10,7 @@ r_delims    = compile(r"[\W_\d]+")
 r_title     = compile("Title: (.*)")
 r_author    = compile("Author: (.*)")
 
-conn = sqlite3.connect('./knowledge.db')
+conn = sqlite3.connect('./data/knowledge.db')
 conn.text_factory = str
 c = conn.cursor()
 

@@ -8,7 +8,7 @@ from math   import log10
 PATH = './train/'
 
 # Prepare the db connection
-conn = sqlite3.connect('./knowledge.db')
+conn = sqlite3.connect('./data/knowledge.db')
 conn.text_factory = str
 c = conn.cursor()
 
@@ -150,34 +150,39 @@ def relevance():
         ''')
 
 def indicators():
-    nfeatures = 1000
+    nfeatures = 2000
+    plain = False
     print "Selecting top %d indicative words" % nfeatures
-    c.execute('''DROP TABLE IF EXISTS indicators''')
-    c.execute('''Create TABLE IF NOT EXISTS indicators
-            ( word      TEXT
-            , score     REAL
-        )''')
-
-    for (cat,) in c.execute('SELECT category FROM categories').fetchall():
-        xs = c.execute('''SELECT word, relevance 
-                FROM relevant 
-                WHERE category = ? 
+    if plain:
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS indicators AS
+                SELECT category AS category
+                    , word as word
+                    , relevance as score
+                FROM relevant
                 ORDER BY relevance DESC
-                LIMIT ?'''
-            , [cat, nfeatures/8]).fetchall()
-        for x in xs:
-            c.execute('INSERT INTO indicators (word, score) VALUES (?, ?)', x)
-    """
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS indicators AS
-            SELECT category AS category
-                , word as word
-                , relevance as score
-            FROM relevant
-            ORDER BY relevance DESC
-            LIMIT ?
-        ''', [nfeatures])
-    """
+                LIMIT ?
+            ''', [nfeatures])
+    else:
+        c.execute('''DROP TABLE IF EXISTS indicators''')
+        c.execute('''Create TABLE IF NOT EXISTS indicators
+                ( word      TEXT
+                , score     REAL
+            )''')
+
+        cats = c.execute('SELECT category FROM categories').fetchall()
+        ncats = nfeatures / len(cats)
+        print "Using top %d words from each category" % ncats
+        for (cat,) in cats:
+            xs = c.execute('''SELECT word, relevance 
+                    FROM relevant 
+                    WHERE category = ? 
+                    ORDER BY relevance DESC
+                    LIMIT ?'''
+                , [cat, ncats]).fetchall()
+            for x in xs:
+                c.execute('''INSERT INTO indicators (word, score)
+                    VALUES (?, ?)''', x)
 
 def training_table():
     print "Creating training table"
