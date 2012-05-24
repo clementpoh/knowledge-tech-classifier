@@ -10,7 +10,7 @@ r_delims    = compile(r"[\W_\d]+")
 r_title     = compile("Title: (.*)")
 r_author    = compile("Author: (.*)")
 
-conn = sqlite3.connect('./data/knowledge.db')
+conn = sqlite3.connect('./knowledge.db')
 conn.text_factory = str
 c = conn.cursor()
 
@@ -51,10 +51,10 @@ init = c.execute('SELECT word, 0 FROM indicators').fetchall()
 indicators = [w for (w, f) in init]
 columns = meta + indicators
 
-output = DictWriter(open('data/dev.csv', 'wb'), columns)
+output = DictWriter(open('dev.csv', 'wb'), columns)
 print "Outputting test data csv"
 
-for (file, cat) in reader(open("data/dev.class")):
+for (file, cat) in reader(open("dev.class")):
     tokens, total, diff, title, auth = preprocess_book(file)
 
     row = dict(init)

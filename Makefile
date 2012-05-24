@@ -10,7 +10,7 @@ train.csv: train.extract.py
 dev.csv: dev.extract.py train.csv
 	$(PYTHON) dev.extract.py
 
-rf.csv: rf.classifier.py train.csv 
+rf.csv: rf.classifier.py dev.csv train.csv 
 	$(PYTHON27) rf.classifier.py
 
 svm.csv: svm.classifier.py dev.csv train.csv

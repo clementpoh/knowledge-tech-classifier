@@ -37,7 +37,8 @@ library.
 The aim of this report is to develop a text categorisation system to classify a
 collection of books. The system is provided with three hundred books to be
 trained on, to generate a feature set that is used to predict the categories of
-another hundred books.
+another hundred books. However more generally, the goal is to create a system
+that can classify any text agnostic of categories, training data and language.
 
 \section{Approach}
 
@@ -242,8 +243,9 @@ there may be an improvement in the classifier.
 
 The text categorisation method outlined in this report offers a plausible first
 attempt at document classification. The system developed is likely to work with
-western, and maybe even all alphabetic languages, but would be abominable on
-pictorial, e.g. East Asian, languages. 
+independently of categories, and training data; it's linguistically compatible
+with western, and maybe even all alphabetic languages, but would be abominable
+on pictorial, e.g. East Asian, languages. 
 
 TF*IDF scores together with the random forest classifier are a powerful tools
 for text classification; however the classifier only reflects the biases of the

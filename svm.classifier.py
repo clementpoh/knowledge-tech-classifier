@@ -10,8 +10,8 @@ def read_data(filename):
         samples.append(row)
     return samples
 
-raw_train = read_data("data/train.csv")
-raw_test = read_data("data/dev.csv")
+raw_train = read_data("train.csv")
+raw_test = read_data("dev.csv")
 
 targets = [ord(x[2]) for x in raw_train]
 train   = [x[3:] for x in raw_train]

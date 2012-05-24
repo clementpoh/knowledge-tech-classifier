@@ -8,7 +8,7 @@ from math   import log10
 PATH = './train/'
 
 # Prepare the db connection
-conn = sqlite3.connect('./data/knowledge.db')
+conn = sqlite3.connect('./knowledge.db')
 conn.text_factory = str
 c = conn.cursor()
 
@@ -89,7 +89,7 @@ def preprocess_book(file, cat):
 def process_books():
     print "Parsing books"
     nbooks = 0.0
-    for (file, cat) in reader(open("data/train.class")):
+    for (file, cat) in reader(open("train.class")):
         tokens, total = preprocess_book(file, cat)
 
         for (tok, freq) in tokens.items(): 
@@ -207,11 +207,11 @@ def write_training_csv():
     indicators = c.execute('SELECT word, 0 FROM indicators').fetchall()
     columns = meta + [w for (w, f) in indicators]
 
-    output = DictWriter(open('data/train.csv', 'wb'), columns)
+    output = DictWriter(open('train.csv', 'wb'), columns)
     # output.writeheader()
 
     print "Outputting final training data csv"
-    for (file, cat) in reader(open("data/train.class")):
+    for (file, cat) in reader(open("train.class")):
         row = dict(indicators)
         c.execute('''SELECT author, title, total, diff, word, tf
                 FROM training WHERE file = ?''', [file])
