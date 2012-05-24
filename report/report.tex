@@ -126,8 +126,8 @@ and then outputs its predictions. It performed superbly.
 In much the same way the support vector machine classifier attempts to fit the
 training data, then predict the test data. It performed very poorly. The
 original intention was to combine the two classifiers into a better hybrid
-classifier; however, due to the poor performance of the SVM classifier, the plan
-was discontinued.
+classifier if they were successful; however, due to the poor performance of the
+SVM classifier, the plan was discontinued.
 
 \section{Results}
 
@@ -174,9 +174,9 @@ This is credibly because names that appeared in few books were now excluded as
 variables.
 
 Changing the way the feature variables were chosen appeared to increase the
-effiency and lower the variance of the classifier. Rather than choosing the top
-2000 words with the highest TF*IDF scores, the top 250 words from each category
-are chosen.
+efficiency and lower the variance of the classifier. Originally the top 
+2000 words with the highest TF*IDF scores were chosen. Switching this to the
+top 250 words from each category are chosen.
 
 \subsection{Result Analysis}
 
@@ -217,13 +217,27 @@ categories.
 \section{Discussion}
 
 While the system was overall very successful in categorising the test set
-against the training set, there are a few avenues for possible improvement
-apart from the ones already mentioned above.
+against the training set, there are a few avenues for possible improvement apart
+from the ones already mentioned above.
 
-The method seems to scale fairly well, switching the test set to be used as a
-dataset, and the test set to be predicted, the program correctly predicted
-237/300 documents using 200 trees; Unsurprisingly, a quick look at the output
-suggests that the issues it suffers from normally are exacerbated only
+It was very difficult to improve the random forest due to its randomness.
+Empirically there wasn't a significant between using the GINI and entropy
+methods. 
+
+Maximising its settings should lower the variance and bring the trees results to
+equilibrium. Due to the expensive computational costs, it was difficult to
+measure improvements with different feature extraction techniques. No optimal
+forest configuration was found, and changing the features would also inevitably
+affect the forest. 
+
+However to improve the classifier in general, the random forest classifier could
+be combined with other effective classifiers to develop an even better
+classifier as per the original intention.
+
+The approach taken seemed to scale fairly well, switching the test set to be
+used as a dataset, and the test set to be predicted, the program correctly
+predicted 237/300 documents using 200 trees; Unsurprisingly, a quick look at the
+output suggests that the issues it suffers from normally are exacerbated only
 correctly predicting 3/12 instances of C documents.
 
 Very often document titles are indicative of the subject of a document. Even
@@ -249,7 +263,7 @@ on pictorial, e.g. East Asian, languages.
 
 TF*IDF scores together with the random forest classifier are a powerful tools
 for text classification; however the classifier only reflects the biases of the
-training data. with this training data, it is unlikely that the classifier
+training data. With this training data, it is unlikely that the classifier
 would work with unedited content, e.g.  tweets, E-mails and forum posts etc.
 nor would it work with non-plain-text documents.
 
