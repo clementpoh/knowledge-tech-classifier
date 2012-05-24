@@ -5,9 +5,10 @@ from csv import reader, writer
 from sklearn.ensemble import RandomForestClassifier
 
 splits = 2
-estimators = 200
+estimators = 100
 features = 200
 seed = 1337
+criterion = "entropy"
 
 def read_data(filename):
     samples = []
@@ -28,28 +29,29 @@ print "Classifying dev using random forests"
 print "Estimators:\t%d"     % estimators
 print "Min Splits:\t%d"     % splits
 print "Max Features:\t%d"   % features
+print "Criterion:\t%s"      % criterion
 print "Random Seed:\t%d"    % seed
 
 rf = RandomForestClassifier(
         n_estimators = estimators
         , min_samples_split = splits
         , max_features = features
-        , random_state = seed
+        , criterion = criterion
+        #, random_state = seed
         , compute_importances = True
         )
 rf.fit(train, targets)
 
 classes = list(rf.predict(test))
-probs   = list(rf.predict_proba(test))
 
 output = writer(open('rf.csv', 'wb'))
-header = ['File', 'Title', 'Actual', 'Predicted'] + columns
+header = ['File', 'Title', 'Actual', 'Predicted']
 output.writerow(header)
 
 correct = 0
 for i in range(len(test)):
     meta[i].append(classes[i])
-    row = meta[i] + list(probs[i])
+    row = meta[i] 
     output.writerow(row)
 
     if classes[i] == meta[i][2]:

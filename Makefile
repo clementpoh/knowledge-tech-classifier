@@ -1,5 +1,5 @@
 PYTHON		=	python
-PYTHON27 	=	python27
+PYTHON27 	=	python
 
 .PHONY: all
 all: rf.csv

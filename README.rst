@@ -34,6 +34,12 @@ probabilities for each category are then written to a csv file.
 
 Generating Output
 -----------------
+Either run the Makefile with the command:
+
+make
+
+Or manually run the commands in the following order:
+
 1) python train.extract.py
 2) python dev.extract.py
 3) python rf.classifier.py
