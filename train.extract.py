@@ -135,7 +135,7 @@ def cat_analysis():
                 , word AS word
                 , sum(freq) as cfreq
                 , sum(total) as ctotal
-                , cast(sum(freq) AS real) / sum(total) AS tf
+                , cast(sum(freq) AS real) / words AS tf
             FROM book_words JOIN books USING(file) 
                 JOIN categories USING(category)
             GROUP BY category, word;
