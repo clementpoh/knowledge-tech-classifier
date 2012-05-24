@@ -59,7 +59,7 @@ random tree classifier. The second is a support vector machine classifier.
 
 \subsection{Feature Selection}
 
-The features used for classification are the top N, 1000 by default, unique
+The features used for classification are the top N, 2000 by default, unique
 words that are determined to be indicative of category. In addition to these,
 the length of the book, and the number of unique words as well as the length of
 the author's name is also used, if it can be found.  Words are determined to be
@@ -81,8 +81,9 @@ scores occur in many books, but are sufficiently rare that they can be used to
 indicate category. Words with low scores occur in all the books, and are
 therefore discarded.
 
-The top N, 1000 as mentioned above, words of this table are then chosen
-to be used as variables for the feature vector as inputs to the classifiers.
+Originally the top N words of this table were chosen to be used as variables for
+the feature vector as inputs to the classifiers. Later the top W, default 250,
+words with the highest TF*IDF scores from each category were selected.
 
 This table is then naturally joined with all the words in each book to create
 the training feature vector, where the value used is the word's term frequency
@@ -104,9 +105,11 @@ the authors' names is used for questionable value.
 
 \subsection{Categorisation}
 
-Random forests and support vector machines are powerful classification
-techniques and were chosen as classifiers for this reason. The classifiers were
-implemented using the python package sci-kit.
+Random forests are a very powerful classification technique and so were chosen
+as classifiers for this reason. The support vector machine classifier was chosen
+because of its similar interface to the random forest and in the same package as
+the other random forests. The classifiers were implemented using the python
+package sci-kit.
 
 Both classifiers take the same data sets as input and write to the same output
 specification, so can be used interchangeably. They both output the file names;
@@ -115,7 +118,7 @@ category; and predicted probabilities for each category are then written to a
 CSV file.
 
 The random forest classifier creates a random forest of T trees, 200 by
-default, considering F features, 300 by default, to fit the training data using
+default, considering F features, 200 by default, to fit the training data using
 GINI coefficients. It is then used to predict the categories of the test data,
 and then outputs its predictions. It performed superbly.
 
@@ -152,13 +155,12 @@ implying that the test set and training sets were distributed very similarly.
 
 Due to the random nature of the random forest classifier and the corresponding
 increase in processing time it is difficult to say precisely how much the
-classifier improved when each technique was applied; it was difficult to test
-each technique independently.
+classifier improved when each technique was applied.
 
 The greatest initial improvements of the classifier were found by expanding the
 feature vector from 1000 variables to 2000 variables. Until this increase,
 neither increasing the number of trees nor raising the number of variables
-considered per split were found to increase the accuracy of the RF
+considered per split were found to increase the accuracy of the random forest
 significantly. 
 
 After increasing the size of the feature vector, the effectiveness of the
@@ -169,6 +171,11 @@ Raising the threshold for the number of books a word is required to be in, to
 qualify as a variable from 1 to 10, seemed to lower the variance of the output.
 This is credibly because names that appeared in few books were now excluded as
 variables.
+
+Changing the way the feature variables were chosen appeared to increase the
+effiency and lower the variance of the classifier. Rather than choosing the top
+2000 words with the highest TF*IDF scores, the top 250 words from each category
+are chosen.
 
 \subsection{Result Analysis}
 
@@ -199,7 +206,7 @@ While the performance of the system is fairly clear from the table, there are a
 few points that are important to note. Category C was predicted perfectly from
 the table.
 
-Taking a closer look at the classification mistakes, it appears as though
+Taking a closer look at the classification errors, it appears as though
 categories A and F were occluded by the other categories. In each actual
 occurrence of A, the classifier predicted D; in each actual instance of F the
 classifier called E. For each false positive of B, the category was actually D.
@@ -223,31 +230,26 @@ just the same analysis that was applied to document content, could be applied
 to document titles with appropriate weighting, might improve the system's
 accuracy.
 
-A lot of words are dispersed over their inflected, conjugated and declined
+Many words are dispersed over their inflected, conjugated and declined
 versions of themselves. If the words were stemmed before processing, it might
 improve the effectiveness of the classifier.
 
-Context is lot when using individual words; if repeated phrases , or even just
-trigrams or bigrams were used as feature variables it is reasonable that there
-may be an improvement in the classifier.
-
-The words used in the feature vectors may be chosen more evenly from each
-category; rather than just choosing the top 2000 TF*IDF scored words, it might
-be better to choose the top 250 from each category.
-
-With the training data provided, I am not confident the system would work well
-with unedited self published content i.e. with E-mails, forum posts, tweets etc.
+Context is lost when using individual words; if common repeated phrases, or even
+just trigrams or bigrams were used as feature variables it is reasonable that
+there may be an improvement in the classifier.
 
 \section{Conclusions}
 
 The text categorisation method outlined in this report offers a plausible first
 attempt at document classification. The system developed is likely to work with
 western, and maybe even all alphabetic languages, but would be abominable on
-pictorial, i.e. East Asian, languages.  
+pictorial, e.g. East Asian, languages. 
 
 TF*IDF scores together with the random forest classifier are a powerful tools
-for text classification; however, no matter how powerful the classifier, if the
-training data is badly formed the classifier will only reflect the bias.
+for text classification; however the classifier only reflects the biases of the
+training data. with this training data, it is unlikely that the classifier
+would work with unedited content, e.g.  tweets, E-mails and forum posts etc.
+nor would it work with non-plain-text documents.
 
 \bibliographystyle{acl}
 \bibliography{sample}

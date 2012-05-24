@@ -26,7 +26,7 @@ The classifiers are completely independent of each other, but are made to be
 compatible with the feature vectors created by the extractors. The first is is a
 random tree classifier. The second is a support vector machine classifier.
 
-The classifiers are completely independent of each other.  Both classifiers take
+The classifiers are completely independent of each other. Both classifiers take
 the same data sets as input and write to the same output specification, so can
 be used interchangeably. They both output the file names; titles and authors if
 they can be found; the actual category; predicted category; and predicted
