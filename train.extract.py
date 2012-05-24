@@ -133,8 +133,11 @@ def cat_analysis():
         CREATE TABLE IF NOT EXISTS cat_words AS
             SELECT category AS category
                 , word AS word
-                , cast(sum(freq) AS real) / words AS tf
-            FROM book_words NATURAL JOIN books NATURAL JOIN categories
+                , sum(freq) as cfreq
+                , sum(total) as ctotal
+                , cast(sum(freq) AS real) / sum(total) AS tf
+            FROM book_words JOIN books USING(file) 
+                JOIN categories USING(category)
             GROUP BY category, word;
         ''')
 
