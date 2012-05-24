@@ -8,7 +8,8 @@ splits = 2
 estimators = 100
 features = 200
 seed = 1337
-criterion = "entropy"
+# May be either "gini" or "entropy"
+criterion = "gini"
 
 def read_data(filename):
     samples = []
@@ -37,7 +38,7 @@ rf = RandomForestClassifier(
         , min_samples_split = splits
         , max_features = features
         , criterion = criterion
-        #, random_state = seed
+        , random_state = seed
         , compute_importances = True
         )
 rf.fit(train, targets)
@@ -45,13 +46,12 @@ rf.fit(train, targets)
 classes = list(rf.predict(test))
 
 output = writer(open('rf.csv', 'wb'))
-header = ['File', 'Title', 'Actual', 'Predicted']
+header = ['File', 'Actual', 'Predicted', 'Title']
 output.writerow(header)
 
 correct = 0
 for i in range(len(test)):
-    meta[i].append(classes[i])
-    row = meta[i] 
+    row = [meta[i][0], meta[i][2], classes[i], meta[i][1]]
     output.writerow(row)
 
     if classes[i] == meta[i][2]:
