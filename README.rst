@@ -48,16 +48,16 @@ Or manually run the commands in the following order:
 Output
 ------
 train.extract.py creates:
-    data/train.csv
+    ./train.csv
 
 dev.extract.py creates:
-    data/dev.csv
+    ./dev.csv
 
 rf.classifier.py creates:
-    rf.csv
+    ./rf.csv
 
 svm.classifier.py creates:
-    svm.csv
+    ./svm.csv
 
 When using 500 trees per forest, and 300 features per split, rf.classifier.py
 takes around 301.66 seconds on an Ubuntu Core 2 Duo.
@@ -85,11 +85,11 @@ each row in test.csv and their probabilities.
 
 Assumptions
 -----------
-The classifiers expect the files:
-data/dev.csv
-data/dev.class
-data/train.csv
-data/train.class
+The classifiers expect the following files to run correctly:
+./dev.csv
+./dev.class
+./train.csv
+./train.class
 
 Dependencies
 ------------

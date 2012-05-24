@@ -60,12 +60,11 @@ random tree classifier. The second is a support vector machine classifier.
 
 \subsection{Feature Selection}
 
-The features used for classification are the top N, 2000 by default, unique
-words that are determined to be indicative of category. In addition to these,
-the length of the book, and the number of unique words as well as the length of
-the author's name is also used, if it can be found.  Words are determined to be
-indicative according to their TF*IDF score, where TF is calculated across the
-category.
+The features used for classification are the top 2000 unique words that are
+determined to be indicative of category. In addition to these, the length of the
+book, and the number of unique words as well as the length of the author's name
+is also used, if it can be found.  Words are determined to be indicative
+according to their TF*IDF score, where TF is calculated across the category.
 
 The training extractor attempts to tokenise each book, keeping track of: total
 number of words; total unique words; category; word; and each word's term
@@ -73,8 +72,8 @@ frequency; storing information about each word and each book in a database.
 Then a list is created with each word's term frequency calculated over the
 categories it is found in.
 
-A list of words is created populated with words that appear in more than M, 10
-by default, books and their respective inverse document frequencies. 
+A list of words is created populated with words that appear in more than 10
+books and their respective inverse document frequencies. 
 
 These two lists are crossed, and the TF*IDFs for each word, in each category are
 calculated. The idea is that words in the resultant table with high TF*IDF
@@ -82,9 +81,10 @@ scores occur in many books, but are sufficiently rare that they can be used to
 indicate category. Words with low scores occur in all the books, and are
 therefore discarded.
 
-Originally the top N words of this table were chosen to be used as variables for
-the feature vector as inputs to the classifiers. Later the top W, default 250,
-words with the highest TF*IDF scores from each category were selected.
+Originally the top 2000, as above, words of this table were chosen to be used as
+variables for the feature vector as inputs to the classifiers. Later the top W,
+default 250, words with the highest TF*IDF scores from each category were
+selected.
 
 This table is then naturally joined with all the words in each book to create
 the training feature vector, where the value used is the word's term frequency
@@ -118,10 +118,10 @@ titles and authors if they can be found; the actual category; predicted
 category; and predicted probabilities for each category are then written to a
 CSV file.
 
-The random forest classifier creates a random forest of T trees, 200 by
-default, considering F features, 200 by default, to fit the training data using
-GINI coefficients. It is then used to predict the categories of the test data,
-and then outputs its predictions. It performed superbly.
+The random forest classifier creates a random forest of 100 trees considering
+200 features, to fit the training data using GINI coefficients. It is then used
+to predict the categories of the test data, and then outputs its predictions. It
+performed superbly.
 
 In much the same way the support vector machine classifier attempts to fit the
 training data, then predict the test data. It performed very poorly. The
