@@ -53,7 +53,7 @@ output.writerow(header)
 correct = 0
 for i in range(len(test)):
     row = [meta[i][0], meta[i][2], classes[i], meta[i][1]] # + list(probs[1])
-    output.writerow(rowk)
+    output.writerow(row)
 
     if classes[i] == meta[i][2]:
         correct += 1
