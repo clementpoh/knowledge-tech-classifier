@@ -23,16 +23,16 @@ svc = svm.SVC(probability=True)
 svc.fit(train, targets)
 
 classes = list(svc.predict(test))
-probs   = list(svc.predict_proba(test))
+# probs   = list(svc.predict_proba(test))
 
 output = writer(open('svm.csv', 'wb'))
-header = ['File', 'Title', 'Actual', 'Predicted'] + columns
+header = ['File', 'Title', 'Actual', 'Predicted'] # + columns
 output.writerow(header)
 
 correct = 0
 for i in range(len(test)):
     meta[i].append(chr(int(classes[i])))
-    row = meta[i] + list(probs[i])
+    row = meta[i] # + list(probs[i])
     output.writerow(row)
 
     if meta[i][3] == meta[i][2]:

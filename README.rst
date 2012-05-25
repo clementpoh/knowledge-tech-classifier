@@ -28,9 +28,8 @@ random tree classifier. The second is a support vector machine classifier.
 
 The classifiers are completely independent of each other. Both classifiers take
 the same data sets as input and write to the same output specification, so can
-be used interchangeably. They both output the file names; titles and authors if
-they can be found; the actual category; predicted category; and predicted
-probabilities for each category are then written to a csv file.
+be used interchangeably. They both output the file names; titles if they can be
+found; the actual category; and predicted category to a csv file.
 
 Generating Output
 -----------------
